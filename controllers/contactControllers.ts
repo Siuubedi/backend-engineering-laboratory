@@ -29,6 +29,13 @@ export const getContactById = (req: Request, res: Response) => {
 // @route POST /api/contacts
 // @access Public
 export const createContact = (req: Request, res: Response) => {
+    const { name, email, contact } = req.body
+    if (!name || !email || !contact) {
+        res.status(400).json({ message: "Please provide all the fields" })
+        console.log("Please provide all the fields")
+        return
+    }
+
     console.log("Contact created:", req.body)
     res.status(201).json({ message: "Contact created!" })
 }
