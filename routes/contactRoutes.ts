@@ -1,5 +1,6 @@
 import express from "express";
 import { createContact, deleteContact, getAllContacts, getContactById, updateContact } from "../controllers/contactControllers";
+import { validateCreateContact } from "../middleware/validateContact";
 const router = express.Router()
 
 // Get all contacts
@@ -9,7 +10,7 @@ router.get("/", getAllContacts)
 router.get("/:id", getContactById)
 
 // Create new contact
-router.post("/", createContact)
+router.post("/", validateCreateContact, createContact)
 
 // Update contact
 router.put("/:id", updateContact)
