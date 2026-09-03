@@ -18,4 +18,4 @@ router.put("/:id", updateContact)
 // Delete contact
 router.delete("/:id", deleteContact)
 
-module.exports = router;
+export default router;

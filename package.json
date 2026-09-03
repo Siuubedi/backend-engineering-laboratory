@@ -1,12 +1,14 @@
 {
   "name": "learning-express",
+  "type": "module",
   "version": "1.0.0",
   "description": "This is where I am revising the concepts of expressjs",
   "main": "app.ts",
   "scripts": {
-    "dev": "tsx watch app.ts",
-    "start": "tsx app.ts",
-    "typecheck": "tsc --noEmit"
+    "dev": "tsx watch src/app.ts",
+    "start": "tsx src/app.ts",
+    "typecheck": "tsc --noEmit",
+    "contract:emit": "prisma contract emit"
   },
   "repository": {
     "type": "git",
@@ -19,14 +21,17 @@
   },
   "homepage": "https://github.com/Siuubedi/express#readme",
   "dependencies": {
+    "@prisma/orm-postgres": "^8.0.0-rc.8",
     "crypto": "^1.0.1",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@prisma/cli-engine": "^0.2.3",
     "@types/express": "^5.0.6",
     "@types/node": "^26.2.0",
+    "prisma": "^8.0.0-rc.10",
     "tsx": "^4.23.5",
     "typescript": "^7.0.2"
   }

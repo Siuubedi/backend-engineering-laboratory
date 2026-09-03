@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../src/errors/AppError";
-import { createContactSchema } from "../src/schemas/contactSchema";
+import { AppError } from "../errors/AppError";
+import { createContactSchema } from "../schemas/contactSchema";
 
 export const validateCreateContact = (req: Request, res: Response, next: NextFunction) => {
     const result = createContactSchema.safeParse(req.body);
