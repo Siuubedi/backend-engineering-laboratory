@@ -1,0 +1,670 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.contact",
+    "label": "Create table \"contact\"",
+    "summary": "Creates table \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contact\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contact\"",
+        "sql": "CREATE TABLE \"public\".\"contact\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"displayName\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"normalizedDisplayName\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contact\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.contactEmail",
+    "label": "Create table \"contactEmail\"",
+    "summary": "Creates table \"contactEmail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contactEmail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contactEmail\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactEmail\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contactEmail\"",
+        "sql": "CREATE TABLE \"public\".\"contactEmail\" (\n  \"contactId\" uuid NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"normalizedEmail\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contactEmail\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactEmail\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.contactPhone",
+    "label": "Create table \"contactPhone\"",
+    "summary": "Creates table \"contactPhone\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contactPhone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contactPhone\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactPhone\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contactPhone\"",
+        "sql": "CREATE TABLE \"public\".\"contactPhone\" (\n  \"contactId\" uuid NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"normalizedPhone\" text NOT NULL,\n  \"phone\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contactPhone\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactPhone\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.user",
+    "label": "Create table \"user\"",
+    "summary": "Creates table \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"user\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"user\"",
+        "sql": "CREATE TABLE \"public\".\"user\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"normalizedEmail\" text NOT NULL,\n  \"normalizedPhone\" text,\n  \"passwordHash\" text NOT NULL,\n  \"phone\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"user\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.contact.contact_userId_normalizedDisplayName_key",
+    "label": "Add unique constraint on \"contact\" (userId, normalizedDisplayName)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "contact_userId_normalizedDisplayName_key",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"contact_userId_normalizedDisplayName_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contact_userId_normalizedDisplayName_key",
+          "public",
+          "\"public\".\"contact\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"contact_userId_normalizedDisplayName_key\"",
+        "sql": "ALTER TABLE \"public\".\"contact\" ADD CONSTRAINT \"contact_userId_normalizedDisplayName_key\" UNIQUE (\"userId\", \"normalizedDisplayName\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"contact_userId_normalizedDisplayName_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contact_userId_normalizedDisplayName_key",
+          "public",
+          "\"public\".\"contact\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.contact.contact_id_userId_key",
+    "label": "Add unique constraint on \"contact\" (id, userId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "contact_id_userId_key",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"contact_id_userId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contact_id_userId_key",
+          "public",
+          "\"public\".\"contact\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"contact_id_userId_key\"",
+        "sql": "ALTER TABLE \"public\".\"contact\" ADD CONSTRAINT \"contact_id_userId_key\" UNIQUE (\"id\", \"userId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"contact_id_userId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contact_id_userId_key",
+          "public",
+          "\"public\".\"contact\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.contactEmail.contactEmail_userId_normalizedEmail_key",
+    "label": "Add unique constraint on \"contactEmail\" (userId, normalizedEmail)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "contactEmail_userId_normalizedEmail_key",
+        "table": "contactEmail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"contactEmail_userId_normalizedEmail_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactEmail_userId_normalizedEmail_key",
+          "public",
+          "\"public\".\"contactEmail\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"contactEmail_userId_normalizedEmail_key\"",
+        "sql": "ALTER TABLE \"public\".\"contactEmail\" ADD CONSTRAINT \"contactEmail_userId_normalizedEmail_key\" UNIQUE (\"userId\", \"normalizedEmail\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"contactEmail_userId_normalizedEmail_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactEmail_userId_normalizedEmail_key",
+          "public",
+          "\"public\".\"contactEmail\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.contactPhone.contactPhone_userId_normalizedPhone_key",
+    "label": "Add unique constraint on \"contactPhone\" (userId, normalizedPhone)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "contactPhone_userId_normalizedPhone_key",
+        "table": "contactPhone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"contactPhone_userId_normalizedPhone_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactPhone_userId_normalizedPhone_key",
+          "public",
+          "\"public\".\"contactPhone\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"contactPhone_userId_normalizedPhone_key\"",
+        "sql": "ALTER TABLE \"public\".\"contactPhone\" ADD CONSTRAINT \"contactPhone_userId_normalizedPhone_key\" UNIQUE (\"userId\", \"normalizedPhone\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"contactPhone_userId_normalizedPhone_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactPhone_userId_normalizedPhone_key",
+          "public",
+          "\"public\".\"contactPhone\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_normalizedEmail_key",
+    "label": "Add unique constraint on \"user\" (normalizedEmail)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_normalizedEmail_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_normalizedEmail_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_normalizedEmail_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_normalizedEmail_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_normalizedEmail_key\" UNIQUE (\"normalizedEmail\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_normalizedEmail_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_normalizedEmail_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_normalizedPhone_key",
+    "label": "Add unique constraint on \"user\" (normalizedPhone)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_normalizedPhone_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_normalizedPhone_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_normalizedPhone_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_normalizedPhone_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_normalizedPhone_key\" UNIQUE (\"normalizedPhone\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_normalizedPhone_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_normalizedPhone_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contact.contact_userId_idx_a489d58a",
+    "label": "Create index \"contact_userId_idx_a489d58a\" on \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contact_userId_idx_a489d58a",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contact_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contact_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"contact_userId_idx_a489d58a\" ON \"public\".\"contact\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contact_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contact_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contactEmail.contactEmail_contactId_userId_idx_8218c639",
+    "label": "Create index \"contactEmail_contactId_userId_idx_8218c639\" on \"contactEmail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contactEmail_contactId_userId_idx_8218c639",
+        "table": "contactEmail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contactEmail_contactId_userId_idx_8218c639\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactEmail_contactId_userId_idx_8218c639\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contactEmail_contactId_userId_idx_8218c639\"",
+        "sql": "CREATE INDEX \"contactEmail_contactId_userId_idx_8218c639\" ON \"public\".\"contactEmail\" (\"contactId\", \"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contactEmail_contactId_userId_idx_8218c639\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactEmail_contactId_userId_idx_8218c639\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contactPhone.contactPhone_contactId_userId_idx_8218c639",
+    "label": "Create index \"contactPhone_contactId_userId_idx_8218c639\" on \"contactPhone\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contactPhone_contactId_userId_idx_8218c639",
+        "table": "contactPhone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contactPhone_contactId_userId_idx_8218c639\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactPhone_contactId_userId_idx_8218c639\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contactPhone_contactId_userId_idx_8218c639\"",
+        "sql": "CREATE INDEX \"contactPhone_contactId_userId_idx_8218c639\" ON \"public\".\"contactPhone\" (\"contactId\", \"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contactPhone_contactId_userId_idx_8218c639\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contactPhone_contactId_userId_idx_8218c639\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contact.contact_userId_fkey",
+    "label": "Add foreign key \"contact_userId_fkey\" on \"contact\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contact_userId_fkey",
+        "table": "contact"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contact_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contact_userId_fkey",
+          "public",
+          "\"public\".\"contact\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contact_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contact\"\nADD CONSTRAINT \"contact_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"user\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contact_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contact_userId_fkey",
+          "public",
+          "\"public\".\"contact\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contactEmail.contactEmail_contactId_userId_fkey",
+    "label": "Add foreign key \"contactEmail_contactId_userId_fkey\" on \"contactEmail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contactEmail_contactId_userId_fkey",
+        "table": "contactEmail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contactEmail_contactId_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactEmail_contactId_userId_fkey",
+          "public",
+          "\"public\".\"contactEmail\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contactEmail_contactId_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contactEmail\"\nADD CONSTRAINT \"contactEmail_contactId_userId_fkey\"\nFOREIGN KEY (\"contactId\", \"userId\")\nREFERENCES \"public\".\"contact\" (\"id\", \"userId\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contactEmail_contactId_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactEmail_contactId_userId_fkey",
+          "public",
+          "\"public\".\"contactEmail\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contactPhone.contactPhone_contactId_userId_fkey",
+    "label": "Add foreign key \"contactPhone_contactId_userId_fkey\" on \"contactPhone\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contactPhone_contactId_userId_fkey",
+        "table": "contactPhone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contactPhone_contactId_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactPhone_contactId_userId_fkey",
+          "public",
+          "\"public\".\"contactPhone\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contactPhone_contactId_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contactPhone\"\nADD CONSTRAINT \"contactPhone_contactId_userId_fkey\"\nFOREIGN KEY (\"contactId\", \"userId\")\nREFERENCES \"public\".\"contact\" (\"id\", \"userId\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contactPhone_contactId_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contactPhone_contactId_userId_fkey",
+          "public",
+          "\"public\".\"contactPhone\""
+        ]
+      }
+    ]
+  }
+]

@@ -1,21 +1,72 @@
 // use prisma-next
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+  id              Uuid     @id @default(uuid())
+  name            String
+  email           String
+  normalizedEmail String   @unique
+  passwordHash    String
+  phone           String?
+  normalizedPhone String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       temporal.updatedAt()
+
+  contacts Contact[]
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+model Contact {
+  id                    Uuid     @id @default(uuid())
+  userId                Uuid
+  displayName           String
+  normalizedDisplayName String
+  createdAt             DateTime @default(now())
+  updatedAt             temporal.updatedAt()
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  phones ContactPhone[]
+  emails ContactEmail[]
+
+  @@unique([userId, normalizedDisplayName])
+  @@unique([id, userId])
+}
+
+model ContactPhone {
+  id              Uuid     @id @default(uuid())
+  contactId       Uuid
+  userId          Uuid
+  phone           String
+  normalizedPhone String
+  createdAt       DateTime @default(now())
+  updatedAt       temporal.updatedAt()
+
+  contact Contact @relation(
+    fields: [contactId, userId],
+    references: [id, userId],
+    onDelete: Cascade
+  )
+
+  @@unique([userId, normalizedPhone])
+}
+
+model ContactEmail {
+  id              Uuid     @id @default(uuid())
+  contactId       Uuid
+  userId          Uuid
+  email           String
+  normalizedEmail String
+  createdAt       DateTime @default(now())
+  updatedAt       temporal.updatedAt()
+
+  contact Contact @relation(
+    fields: [contactId, userId],
+    references: [id, userId],
+    onDelete: Cascade
+  )
+
+  @@unique([userId, normalizedEmail])
 }
