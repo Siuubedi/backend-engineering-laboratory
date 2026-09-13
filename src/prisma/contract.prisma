@@ -5,13 +5,57 @@ model User {
   name            String
   email           String
   normalizedEmail String   @unique
-  passwordHash    String
   phone           String?
   normalizedPhone String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       temporal.updatedAt()
 
+  passwordCredential PasswordCredential?
+  oauthAccounts OAuthAccount[]
+
   contacts Contact[]
+}
+
+model PasswordCredential {
+  userId       Uuid   @id
+  passwordHash String
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+}
+
+model OAuthAccount {
+  id                Uuid   @id @default(uuid())
+  userId            Uuid
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now())
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([provider, providerAccountId])
+  @@unique([userId, provider])
+  @@index([userId])
+}
+
+model PendingRegistration {
+  id                   Uuid     @id @default(uuid())
+  name                 String
+  email                String
+  normalizedEmail      String   @unique
+  passwordHash         String
+  verificationCodeHash String
+  expiresAt            DateTime
+  attemptCount         Int      @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            temporal.updatedAt()
 }
 
 model Contact {
