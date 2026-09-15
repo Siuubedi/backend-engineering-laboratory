@@ -4,7 +4,7 @@ import { env } from "./config/env";
 import { errorHandler } from "./middleware/errorHandler";
 import { routeNotFound } from "./middleware/routeNotFound";
 import contactRouter from "./routes/contactRoutes";
-
+import authRoute from "./routes/authRoute"
 const PORT = env.PORT
 const app = express();
 
@@ -19,6 +19,7 @@ app.get("/json", (req: Request, res: Response) => {
 
 app.use(express.json());
 app.use("/api/contacts", contactRouter);
+app.use("/api/auth", authRoute)
 
 // No route matched above
 app.use(routeNotFound)

@@ -1,0 +1,10 @@
+import { Request, Response } from "express"
+import { authService } from "../services/authService";
+
+export const checkEmailAvailability = async (req: Request, res: Response) => {
+    const { email } = req.body
+
+    const result = await authService.checkEmailAvailability(email)
+
+    return res.status(200).json(result)
+}
