@@ -3,8 +3,8 @@ import express, { Request, Response } from "express";
 import { env } from "./config/env";
 import { errorHandler } from "./middleware/errorHandler";
 import { routeNotFound } from "./middleware/routeNotFound";
+import authRoute from "./routes/authRoute";
 import contactRouter from "./routes/contactRoutes";
-import authRoute from "./routes/authRoute"
 const PORT = env.PORT
 const app = express();
 

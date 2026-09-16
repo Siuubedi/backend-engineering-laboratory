@@ -6,4 +6,13 @@ export const emailAvailabilitySchema = z.object({
     )
 })
 
+export const registerUserSchema = z.object({
+    name: z.string().trim().min(1, "Name is required"),
+    email: z.string().trim().pipe(
+        z.email("Invalid email address")
+    ),
+    password: z.string().min(8, "Password must be at least 8 characters.")
+})
+
 export type EmailAvailabilityInput = z.infer<typeof emailAvailabilitySchema>
+export type RegisterInput = z.infer<typeof registerUserSchema>
