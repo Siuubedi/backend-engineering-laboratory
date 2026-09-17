@@ -1,4 +1,4 @@
-import { createHmac, randomInt } from "node:crypto";
+import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 import { env } from "../src/config/env";
 
 export const generateVerificationCode = (): string => {
@@ -26,5 +26,23 @@ export const hashVerificationCode = (code: string, normalizedEmail: string): str
 
 export const verifyVerificationCode = (code: string, normalizedEmail: string, storedHash: string
 ): boolean => {
-    return true
+    // Reject malformed OTP.
+    if (!/^\d{6}$/.test(code)) {
+        return false;
+    }
+
+    // Ensure the stored SHA-256 HMAC is valid hexadecimal.
+    if (!/^[0-9a-fA-F]{64}$/.test(storedHash)) {
+        return false;
+    }
+
+    // Calculate HMAC from the submitted OTP.
+    const computeHash = hashVerificationCode(code, normalizedEmail)
+
+    // Convert hexadecimal digests to bytes.
+    const computedBuffer = Buffer.from(computeHash, "hex")
+    const storedBuffer = Buffer.from(storedHash, "hex")
+
+    // Compare them.
+    return timingSafeEqual(computedBuffer, storedBuffer)
 }
