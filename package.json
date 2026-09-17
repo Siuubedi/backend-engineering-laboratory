@@ -8,7 +8,10 @@
     "dev": "tsx watch src/app.ts",
     "start": "tsx src/app.ts",
     "typecheck": "tsc --noEmit",
-    "contract:emit": "prisma contract emit"
+    "contract:emit": "prisma contract emit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
