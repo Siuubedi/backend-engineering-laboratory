@@ -1,4 +1,4 @@
-import { hashPassword } from "../../utils/hashPassword";
+import { hashPassword } from "../../utils/password";
 import { normalizeEmail } from "../../utils/normalizeEmail";
 import { AppError } from "../errors/AppError";
 import { db } from "../prisma/db";
